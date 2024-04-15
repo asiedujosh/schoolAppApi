@@ -10,6 +10,9 @@ use App\Http\Controllers\yearController;
 use App\Http\Controllers\topicController;
 use App\Http\Controllers\questionController;
 use App\Http\Controllers\quizRecordsController;
+use App\Http\Controllers\packageController;
+use App\Http\Controllers\newsController;
+use App\Http\Controllers\examSubjectPriceController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -18,12 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route::post('/userLogin', [userController::class, 'login']);
 // Route::post('/userStore', [userController::class, 'store']);
-Route('/run-migration',function(){
-    Artisan::call('optimize:clear');
-    Artisan::call('migrate:fresh --seed');
+// Route('/run-migration',function(){
+//     Artisan::call('optimize:clear');
+//     Artisan::call('migrate:fresh --seed');
 
-    return "Migrations executed successfully";
-});
+//     return "Migrations executed successfully";
+// });
 
 Route::get('/',[clientController::class, 'index']);
 /*** Users Route */
@@ -43,6 +46,12 @@ Route::get('/searchYear', [yearController::class,'searchYear']);
 Route::get('/searchQuestion', [questionController::class,'searchQuestion']);
 Route::get('/searchTopic', [topicController::class,'searchTopic']);
 
+
+Route::get('/getAllPackage',[packageController::class, 'index']);
+Route::get('/getAllNews', [newsController::class, 'index']);
+Route::get('/currentPackage', [packageController::class, 'getCurrentPackage']);
+
+
 //** Exams */
 Route::get('/getAllExam',[examController::class, 'index']);
 Route::get('/getAllSubject',[subjectController::class, 'index']);
@@ -50,7 +59,10 @@ Route::get('/getAllYear',[yearController::class, 'index']);
 Route::get('/getAllTopic',[topicController::class, 'index']);
 Route::get('/getAllQuestion',[questionController::class, 'index']);
 Route::get('/countQuestions',[questionController::class, 'countQuestions']);
+Route::get('/countSubscribers',[packageController::class, 'countSubscribers']);
 Route::get('/getSelectedQuestion',[questionController::class, 'selectedQuestions']);
+Route::get('/getAllLinkedExamSubject',[examSubjectPriceController::class, 'index']);
+Route::get('/userPurchases', [examSubjectPriceController::class, 'getPurchases']);
 
 
 /** Get Records */
@@ -58,23 +70,33 @@ Route::get('/getAllUsers',[userController::class, 'index']);
 Route::get('/getAllStaff',[clientController::class, 'index']);
 Route::get('/getRecordsOfUser', [quizRecordsController::class, 'quizRecordsOfUser']);
 Route::get('/getRecordReview', [quizRecordsController::class, 'getRecordReview']);
+Route::get('/getAllSubscribers',[packageController::class, 'getSubscribers']);
 
+Route::post('/addPricePackage', [packageController::class, 'store']);
 Route::post('/addExam', [examController::class, 'store']);
 Route::post('/addSubject', [subjectController::class, 'store']);
 Route::post('/addYear', [yearController::class, 'store']);
 Route::post('/addTopic', [topicController::class, 'store']);
 Route::post('/addQuestion', [questionController::class, 'store']);
+Route::post('/addNews', [newsController::class, 'addNews']);
 
 Route::post('/addQuizRecords', [quizRecordsController::class, 'store']);
+Route::post('/linkExamSubject',[examSubjectPriceController::class, 'store']);
+Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchases']);
 
 /** Edit Records */
+Route::put('/clientUpgradePackage/{id}',[packageController::class, 'updateClientPackage']);
+
+Route::put('/packageUpdate/{id}',[packageController::class, 'updatePackage']);
 Route::put('/examsUpdate/{id}',[examController::class, 'updateExams']);
 Route::put('/questionUpdate/{id}',[questionController::class, 'updateQuestion']);
 Route::put('/subjectUpdate/{id}',[subjectController::class, 'updateSubject']);
 Route::put('/yearUpdate/{id}',[yearController::class, 'updateYear']);
 Route::put('/topicUpdate/{id}',[topicController::class, 'updateTopic']);
+Route::put('/updateNews/{id}',[newsController::class, 'updateNews']);
 
 /**Delete Records  */
+Route::delete('/deletePackage',[packageController::class, 'deletePackage']);
 Route::delete('/deleteExams',[examController::class, 'deleteExams']);
 Route::delete('/deleteQuestion',[questionController::class, 'deleteQuestion']);
 Route::delete('/deleteSubject',[subjectController::class, 'deleteSubject']);
@@ -82,6 +104,8 @@ Route::delete('/deleteTopic',[topicController::class, 'deleteTopic']);
 Route::delete('/deleteYear',[yearController::class, 'deleteYear']);
 Route::delete('/deleteUser',[userController::class, 'deleteUser']);
 Route::delete('/deleteStaff', [clientController::class, 'deleteClient']);
+Route::delete('/deleteRecord', [quizRecordsController::class, 'deleteRecords']);
+Route::delete('/deleteNews', [newsController::class, 'deleteNews']);
 
 
 Route::middleware(['auth:sanctum'])->get('/retrieve', [clientController::class, 'getUserDetails']);

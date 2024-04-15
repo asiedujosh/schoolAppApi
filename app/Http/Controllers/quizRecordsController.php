@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Traits\HttpResponses;
 use App\Models\userQuizQuestions;
 use App\Models\userQuizMarks;
 use App\Models\userQuizInfo;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class quizRecordsController extends Controller
@@ -75,6 +77,35 @@ class quizRecordsController extends Controller
             'userInfo' => $userRecord
        ]);
     
+    }
+
+
+    public function deleteRecords(Request $request){
+        // return $request->all();
+        $quizId = $request->data;
+        try {
+            DB::beginTransaction();
+    
+            // Delete records from UserQuizQuestions table
+            UserQuizQuestions::where('quizId', $quizId)->delete();
+    
+            // Delete records from UserQuizMarks table
+            UserQuizMarks::where('quizId', $quizId)->delete();
+    
+            // Delete records from UserQuizInfo table
+            UserQuizInfo::where('quizId', $quizId)->delete();
+    
+            DB::commit();
+    
+            return $this->success([
+                'data' => 'Data deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            // If an exception occurs, rollback the transaction
+            DB::rollBack();
+            // Return an error response with the exception message
+            return $this->error('An error occurred', $e->getMessage(), 500);
+        }
     }
   
 }
