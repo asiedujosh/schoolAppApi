@@ -39,7 +39,7 @@ class examSubjectPriceController extends Controller
     public function store(Request $request){
         $relations = new examSubjectPriceRelation;
         $relations->examId = trim($request->examId);
-        $relations->yearId = trim($request->yearId);
+        $relations->yearId = "all";
         $relations->subjectId = trim($request->subjectId);
         $relations->offerType = trim($request->offerType);
         $relations->price = trim($request->price);
