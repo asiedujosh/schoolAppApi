@@ -12,11 +12,18 @@ class subjectController extends Controller
     //
     use HttpResponses;
     //
-    public function index(){
-        $subjects = subject::all();
+    public function index(Request $request){
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        $subjects = subject::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
         return $this->success([
-            'data' => $subjects
-           ]);
+            'data' => $subjects,
+            'pagination' => [
+                'total' => $subjects->total(),
+                'current_page' => $subjects->currentPage(),
+                'last_page' => $subjects->lastPage()
+            ]
+        ]);
     }
 
     public function searchSubject(Request $request) {

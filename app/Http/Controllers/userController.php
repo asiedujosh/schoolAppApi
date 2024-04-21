@@ -16,10 +16,17 @@ class userController extends Controller
 {
     use HttpResponses;
     //
-    public function index(){
-        $users = User::all();
+    public function index(Request $request){
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        $users = User::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);;
         return $this->success([
-            'data' => $users
+            'data' => $users,
+            'pagination' => [
+                'total' => $users->total(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage()
+            ]
            ]);
     }
 

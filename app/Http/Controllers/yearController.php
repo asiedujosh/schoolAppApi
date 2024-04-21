@@ -11,10 +11,17 @@ class yearController extends Controller
       //
       use HttpResponses;
       //
-      public function index(){
-          $year = year::all();
+      public function index(Request $request){
+          $pageNo = $request->input('page');
+          $perPage = $request->input('perPage');
+          $year = year::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
           return $this->success([
-              'data' => $year
+              'data' => $year,
+              'pagination' => [
+                'total' => $year->total(),
+                'current_page' => $year->currentPage(),
+                'last_page' => $year->lastPage()
+            ]
              ]);
       }
 

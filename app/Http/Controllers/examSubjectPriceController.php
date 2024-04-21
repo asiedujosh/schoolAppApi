@@ -11,10 +11,17 @@ class examSubjectPriceController extends Controller
 {
     use HttpResponses;
     //
-    public function index(){
-        $relations = examSubjectPriceRelation::all();
+    public function index(Request $request){
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        $relations = examSubjectPriceRelation::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
         return $this->success([
-            'data' => $relations
+            'data' => $relations,
+            'pagination' => [
+                'total' => $relations->total(),
+                'current_page' => $relations->currentPage(),
+                'last_page' => $relations->lastPage()
+            ]
         ]);
     }
 
@@ -50,6 +57,32 @@ class examSubjectPriceController extends Controller
                 'data' => $relations
             ]);
         } 
+    }
+
+    public function updateExamSubjectLink(Request $request, $id){
+        $formField = [
+            'examId' => trim($request->examId),
+            'yearId' => "all",
+            'subjectId' => trim($request->subjectId),
+            'offerType' => trim($request->offerType),
+            'price' => trim($request->price)
+        ];
+
+        $res = examSubjectPriceRelation::where('id', $id)->update($formField);
+        if($res){
+            return $this->success([
+                'data' => $res
+            ]);
+        }
+    }
+
+    public function deleteExamSubjectLink($id){
+        $res = examSubjectPriceRelation::where('id', $id)->delete();
+        if($res){
+            return $this->success([
+                'message' => "Exam deleted Successfully"
+            ]); 
+        }
     }
 
 

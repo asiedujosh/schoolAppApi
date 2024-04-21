@@ -79,14 +79,13 @@ Route::post('/addYear', [yearController::class, 'store']);
 Route::post('/addTopic', [topicController::class, 'store']);
 Route::post('/addQuestion', [questionController::class, 'store']);
 Route::post('/addNews', [newsController::class, 'addNews']);
-
 Route::post('/addQuizRecords', [quizRecordsController::class, 'store']);
 Route::post('/linkExamSubject',[examSubjectPriceController::class, 'store']);
 Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchases']);
 
 /** Edit Records */
 Route::put('/clientUpgradePackage/{id}',[packageController::class, 'updateClientPackage']);
-
+Route::put('/staffUpdate/{id}', [clientController::class, 'updateClient']);
 Route::put('/packageUpdate/{id}',[packageController::class, 'updatePackage']);
 Route::put('/examsUpdate/{id}',[examController::class, 'updateExams']);
 Route::put('/questionUpdate/{id}',[questionController::class, 'updateQuestion']);
@@ -94,18 +93,20 @@ Route::put('/subjectUpdate/{id}',[subjectController::class, 'updateSubject']);
 Route::put('/yearUpdate/{id}',[yearController::class, 'updateYear']);
 Route::put('/topicUpdate/{id}',[topicController::class, 'updateTopic']);
 Route::put('/updateNews/{id}',[newsController::class, 'updateNews']);
+Route::put('/linkExamSubjectUpdate/{id}',[examSubjectPriceController::class, 'updateExamSubjectLink']);
 
 /**Delete Records  */
-Route::delete('/deletePackage',[packageController::class, 'deletePackage']);
-Route::delete('/deleteExams',[examController::class, 'deleteExams']);
-Route::delete('/deleteQuestion',[questionController::class, 'deleteQuestion']);
-Route::delete('/deleteSubject',[subjectController::class, 'deleteSubject']);
-Route::delete('/deleteTopic',[topicController::class, 'deleteTopic']);
-Route::delete('/deleteYear',[yearController::class, 'deleteYear']);
-Route::delete('/deleteUser',[userController::class, 'deleteUser']);
-Route::delete('/deleteStaff', [clientController::class, 'deleteClient']);
-Route::delete('/deleteRecord', [quizRecordsController::class, 'deleteRecords']);
-Route::delete('/deleteNews', [newsController::class, 'deleteNews']);
+Route::delete('/deletePackage/{id}',[packageController::class, 'deletePackage']);
+Route::delete('/deleteExams/{id}',[examController::class, 'deleteExams']);
+Route::delete('/deleteQuestion/{id}',[questionController::class, 'deleteQuestion']);
+Route::delete('/deleteSubject/{id}',[subjectController::class, 'deleteSubject']);
+Route::delete('/deleteTopic/{id}',[topicController::class, 'deleteTopic']);
+Route::delete('/deleteYear/{id}',[yearController::class, 'deleteYear']);
+Route::delete('/deleteUser/{id}',[userController::class, 'deleteUser']);
+Route::delete('/deleteStaff/{id}', [clientController::class, 'deleteClient']);
+Route::delete('/deleteRecord/{id}', [quizRecordsController::class, 'deleteRecords']);
+Route::delete('/deleteNews/{id}', [newsController::class, 'deleteNews']);
+Route::delete('/deleteExamSubjectLink/{id}', [examSubjectPriceController::class, 'deleteExamSubjectLink']);
 
 
 Route::middleware(['auth:sanctum'])->get('/retrieve', [clientController::class, 'getUserDetails']);

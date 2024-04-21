@@ -12,10 +12,17 @@ class topicController extends Controller
       //
       use HttpResponses;
       //
-      public function index(){
-          $topic = topics::all();
+      public function index(Request $request){
+          $pageNo = $request->input('page');
+          $perPage = $request->input('perPage');
+          $topic = topics::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
           return $this->success([
-              'data' => $topic
+              'data' => $topic,
+              'pagination' => [
+                'total' => $topic->total(),
+                'current_page' => $topic->currentPage(),
+                'last_page' => $topic->lastPage()
+            ]
              ]);
       }
 

@@ -17,10 +17,17 @@ class clientController extends Controller
 {
     use HttpResponses;
 
-    public function index(){
-        $clients = Client::all();
+    public function index(Request $request){
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        $clients = Client::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
         return $this->success([
-            'data' => $clients
+            'data' => $clients,
+            'pagination' => [
+                'total' => $clients->total(),
+                'current_page' => $clients->currentPage(),
+                'last_page' => $clients->lastPage()
+            ]
            ]);
     }
 

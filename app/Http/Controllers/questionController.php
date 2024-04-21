@@ -12,10 +12,17 @@ class questionController extends Controller
 {
     use HttpResponses;
       //
-    public function index(){
-          $question = question::all();
+    public function index(Request $request){
+      $pageNo = $request->input('page');
+      $perPage = $request->input('perPage');
+      $question = question::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
           return $this->success([
-              'data' => $question
+              'data' => $question,
+              'pagination' => [
+                'total' => $question->total(),
+                'current_page' => $question->currentPage(),
+                'last_page' => $question->lastPage()
+              ]
              ]);
       }
 

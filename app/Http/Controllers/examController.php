@@ -11,10 +11,17 @@ class examController extends Controller
 {
     use HttpResponses;
     //
-    public function index(){
-        $exams = exam::all();
+    public function index(Request $request){
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        $exams = exam::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
         return $this->success([
-            'data' => $exams
+            'data' => $exams,
+            'pagination' => [
+                'total' => $exams->total(),
+                'current_page' => $exams->currentPage(),
+                'last_page' => $exams->lastPage()  
+            ]
            ]);
     }
 
@@ -52,15 +59,18 @@ class examController extends Controller
 
     public function updateExams(Request $request, $id){
         $formField = [];
-        if ($request->has('imageUpload') && $request->imageUpload !== '') {
+        
+        if ($request->has('imageUpload') && $request->imageUpload !== null) {
             $image = Image::make($request->imageUpload);
             $compressedImage = $image->resize(200, null, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             })->encode('jpg', 80)->encode('data-url');
 
-            $formField['examImage'] = $compressedImage->encoded;
-        }         
+            $formField['examImage'] = $compressedImage->encoded || null;
+        }  else  {
+            $formField['examImage'] = null;
+        }       
 
         $formField['exam'] = $request->examType;
         $formField['position'] = $request->position;
@@ -76,8 +86,10 @@ class examController extends Controller
 
     public function deleteExams($id){
         $res = exam::where('id', $id)->delete();
+        if($res){
         return $this->success([
-            'message' => "Exams deleted Successfully"
+            'message' => "Exam deleted Successfully"
         ]);
+    }
     }
 }
