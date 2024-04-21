@@ -25,6 +25,14 @@ class examController extends Controller
            ]);
     }
 
+
+    public function mobileIndex(){
+        $exams = exam::all();
+        return $this->success([
+            'data' => $exams
+           ]);
+    }
+
     public function searchExam(Request $request) {
         // $keyword = $request->input('keyword');
         $results = exam::latest()->filter(request(['keyword']))->get();

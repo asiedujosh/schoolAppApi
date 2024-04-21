@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 class examSubjectPriceController extends Controller
 {
     use HttpResponses;
+
+    public function mobileIndex(){
+        $relations = examSubjectPriceRelation::all();
+        return $this->success([
+            'data' => $relations
+        ]);
+    }
+
+
     //
     public function index(Request $request){
         $pageNo = $request->input('page');

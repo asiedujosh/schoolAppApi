@@ -53,15 +53,27 @@ Route::get('/currentPackage', [packageController::class, 'getCurrentPackage']);
 
 
 //** Exams */
+Route::get('/mobileGetAllExam',[examController::class, 'mobileIndex']);
 Route::get('/getAllExam',[examController::class, 'index']);
+
+Route::get('/mobileGetAllSubject',[subjectController::class, 'mobileIndex']);
 Route::get('/getAllSubject',[subjectController::class, 'index']);
+
+Route::get('/mobileGetAllYear',[yearController::class, 'mobileIndex']);
 Route::get('/getAllYear',[yearController::class, 'index']);
+
+Route::get('/mobileGetAllTopic',[topicController::class, 'mobileIndex']);
 Route::get('/getAllTopic',[topicController::class, 'index']);
+
+Route::get('/mobileGetAllLinkedExamSubject',[examSubjectPriceController::class, 'mobileIndex']);
+Route::get('/getAllLinkedExamSubject',[examSubjectPriceController::class, 'index']);
+
+
 Route::get('/getAllQuestion',[questionController::class, 'index']);
 Route::get('/countQuestions',[questionController::class, 'countQuestions']);
 Route::get('/countSubscribers',[packageController::class, 'countSubscribers']);
 Route::get('/getSelectedQuestion',[questionController::class, 'selectedQuestions']);
-Route::get('/getAllLinkedExamSubject',[examSubjectPriceController::class, 'index']);
+
 Route::get('/userPurchases', [examSubjectPriceController::class, 'getPurchases']);
 
 

@@ -11,6 +11,14 @@ class yearController extends Controller
       //
       use HttpResponses;
       //
+
+      public function mobileIndex(){
+        $year = year::all();
+        return $this->success([
+            'data' => $year
+        ]);
+    }
+
       public function index(Request $request){
           $pageNo = $request->input('page');
           $perPage = $request->input('perPage');

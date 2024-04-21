@@ -12,6 +12,14 @@ class topicController extends Controller
       //
       use HttpResponses;
       //
+
+      public function mobileIndex(){
+        $topic = topics::all();
+        return $this->success([
+            'data' => $topic
+        ]);
+    }
+
       public function index(Request $request){
           $pageNo = $request->input('page');
           $perPage = $request->input('perPage');

@@ -12,6 +12,14 @@ class subjectController extends Controller
     //
     use HttpResponses;
     //
+    public function mobileIndex(){
+        $subjects = subject::all();
+        return $this->success([
+            'data' => $subjects
+        ]);
+    }
+
+
     public function index(Request $request){
         $pageNo = $request->input('page');
         $perPage = $request->input('perPage');
