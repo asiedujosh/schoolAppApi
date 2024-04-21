@@ -75,7 +75,7 @@ class examController extends Controller
                 $constraint->upsize();
             })->encode('jpg', 80)->encode('data-url');
 
-            $formField['examImage'] = $compressedImage->encoded || null;
+            $formField['examImage'] = $compressedImage->encoded;
         }  else  {
             $formField['examImage'] = null;
         }       
