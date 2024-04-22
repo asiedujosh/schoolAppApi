@@ -26,6 +26,20 @@ class questionController extends Controller
              ]);
       }
 
+    public function searchQuestion(Request $request) {
+      $examType = $request->input('examType');
+      $year = $request->input('year');
+      $subject = $request->input('subject');
+
+       // Perform your logic based on these parameters
+       $query = question::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject);
+       $results = $query->get();
+        // $results = question::latest()->filter(request(['keyword']))->get();
+        return $this->success([
+            'data' => $results
+           ]);
+    }
+
     public function countQuestions(){
       $countQuestions = question::count();
       return $this->success([
