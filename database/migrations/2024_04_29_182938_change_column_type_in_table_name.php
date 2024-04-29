@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
         Schema::table('questions', function (Blueprint $table) {
-            $table->longText('options')->nullable()->change();
+            $table->integer('questionNo')->nullable()->change();
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('table_name', function (Blueprint $table) {
+            //
+        });
     }
 };

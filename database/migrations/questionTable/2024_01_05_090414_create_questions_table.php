@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('subjectId');
             $table->string('topicId')->nullable();
             $table->longText('question');
-            $table->string('questionNo');
+            $table->integer('questionNo');
             $table->string('questionEquation')->nullable();
             $table->longText("imageOptions")->nullable();
             $table->string('options')->nullable();

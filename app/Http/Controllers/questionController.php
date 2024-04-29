@@ -54,8 +54,8 @@ class questionController extends Controller
         $questionNos = $request->input('questionNos');
 
         // Perform your logic based on these parameters
-        $query = question::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject)->orderBy('questionNo', 'asc');
-        $questions = $query->get();
+        $query = question::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject);
+        $questions = $query->orderBy('questionNo', 'asc')->get();
 
         if ($questionNos !== null) {
             $query->take($questionNos);
