@@ -15,7 +15,7 @@ class questionController extends Controller
     public function index(Request $request){
       $pageNo = $request->input('page');
       $perPage = $request->input('perPage');
-      $question = question::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
+      $question = question::orderBy('questionNo', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
           return $this->success([
               'data' => $question,
               'pagination' => [
@@ -33,7 +33,7 @@ class questionController extends Controller
 
        // Perform your logic based on these parameters
        $query = question::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject);
-       $results = $query->get();
+       $results = $query->orderBy('questionNo', 'asc')->get();
         // $results = question::latest()->filter(request(['keyword']))->get();
         return $this->success([
             'data' => $results
