@@ -15,7 +15,7 @@ class questionController extends Controller
     public function index(Request $request){
       $pageNo = $request->input('page');
       $perPage = $request->input('perPage');
-      $question = question::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
+      $question = question::orderBy('questionNo', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
           return $this->success([
               'data' => $question,
               'pagination' => [
