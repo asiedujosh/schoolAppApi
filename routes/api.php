@@ -44,7 +44,12 @@ Route::get('/searchExam', [examController::class,'searchExam']);
 Route::get('/searchSubject', [subjectController::class,'searchSubject']);
 Route::get('/searchYear', [yearController::class,'searchYear']);
 Route::get('/searchQuestion', [questionController::class,'searchQuestion']);
+Route::get('/searchOralQuestion', [questionController::class, 'searchOralQuestion']);
 Route::get('/searchTopic', [topicController::class,'searchTopic']);
+
+/** Check Whether question no is assigned */
+Route::get('/checkQuestionNo',[questionController::class,'checkQuestionNo']);
+
 
 
 Route::get('/getAllPackage',[packageController::class, 'index']);
@@ -70,7 +75,9 @@ Route::get('/getAllLinkedExamSubject',[examSubjectPriceController::class, 'index
 
 
 Route::get('/getAllQuestion',[questionController::class, 'index']);
+Route::get('/getAllOralQuestion',[questionController::class, 'getOralQuestions']);
 Route::get('/countQuestions',[questionController::class, 'countQuestions']);
+Route::get('/countOralQuestions',[questionController::class, 'countOralQuestions']);
 Route::get('/countSubscribers',[packageController::class, 'countSubscribers']);
 Route::get('/getSelectedQuestion',[questionController::class, 'selectedQuestions']);
 
@@ -94,6 +101,7 @@ Route::post('/addNews', [newsController::class, 'addNews']);
 Route::post('/addQuizRecords', [quizRecordsController::class, 'store']);
 Route::post('/linkExamSubject',[examSubjectPriceController::class, 'store']);
 Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchases']);
+Route::post('/addOralQuestion', [questionController::class, 'storeOralQuestion']);
 
 /** Edit Records */
 Route::put('/clientUpgradePackage/{id}',[packageController::class, 'updateClientPackage']);

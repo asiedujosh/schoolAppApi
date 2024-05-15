@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use App\Traits\HttpResponses;
 use App\Models\question;
+use App\Models\oralQuestionModel;
 use App\Services\ImageCompressor;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 use Illuminate\Http\Request;
@@ -26,6 +28,32 @@ class questionController extends Controller
              ]);
       }
 
+
+    public function getOralQuestions(Request $request){
+      
+        $pageNo = $request->input('page');
+        $perPage = $request->input('perPage');
+        // Fetch all oral questions from the database
+        $oralQuestions = OralQuestionModel::orderBy('questionNo', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
+
+        // Generate pre-signed URLs for each audio file
+        foreach ($oralQuestions as $question) {
+            $question->audio_url = Storage::disk('s3')->temporaryUrl(
+                $question->question, now()->addMinutes(5)
+            );
+        }
+
+        return $this->success([
+          'data' => $oralQuestions,
+          'pagination' => [
+            'total' => $oralQuestions->total(),
+            'current_page' => $oralQuestions->currentPage(),
+            'last_page' => $oralQuestions->lastPage()
+          ]
+         ]);
+    }
+    
+
     public function searchQuestion(Request $request) {
       $examType = $request->input('examType');
       $year = $request->input('year');
@@ -40,10 +68,63 @@ class questionController extends Controller
            ]);
     }
 
+
+    public function searchOralQuestion(Request $request){
+      $examType = $request->input('examType');
+      $year = $request->input('year');
+      $subject = $request->input('subject');
+
+       // Perform your logic based on these parameters
+       $query =  OralQuestionModel::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject);
+       $results = $query->orderBy('questionNo', 'asc')->get();
+
+         // Generate pre-signed URLs for each audio file
+         foreach ($results  as $result) {
+          $result->audio_url = Storage::disk('s3')->temporaryUrl(
+            $result->question, now()->addMinutes(5)
+          );
+        }
+
+        return $this->success([
+          'data' => $results
+         ]);
+    }
+
+
+    public function checkQuestionNo(Request $request) {
+      $examType = $request->input('examType');
+      $year = $request->input('year');
+      $subject = $request->input('subject');
+      $questionNo = $request->input('questionNo');
+
+      if(isset($questionNo) && $questionNo !== "undefined" ){
+
+       // Perform your logic based on these parameters
+       $exists = question::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject)->where('questionNo', $questionNo)->exists();
+        // $results = question::latest()->filter(request(['keyword']))->get();
+       return $this->success([
+        'data' => $exists
+      ]);
+
+    } else {
+      return $this->success([
+        'data' => true
+      ]);
+    }
+    }
+
+
     public function countQuestions(){
       $countQuestions = question::count();
       return $this->success([
         'data' => $countQuestions
+      ]);
+    }
+
+    public function countOralQuestions(){
+      $countOralQuestions = OralQuestionModel::count();
+      return $this->success([
+        'data' => $countOralQuestions
       ]);
     }
 
@@ -118,6 +199,67 @@ class questionController extends Controller
               ]);
           }
       }
+
+      public function storeOralQuestion(Request $request)
+      {
+        $request->validate([
+          'question' => 'required|file|mimes:mp3,wav,aac',
+          // Add other validation rules if necessary
+      ]);
+  
+      try {
+          // Generate a unique filename with timestamp
+          $filename = time() . '_' . $request->file('question')->getClientOriginalName();
+  
+          // Store the file in the S3 bucket
+          $path = Storage::disk('s3')->put('', $request->file('question'), $filename, 'public');
+  
+          if ($path) {
+              // File uploaded successfully
+              $questionMimeType = $request->file('question')->getClientMimeType();
+  
+              $oralQuestion = new OralQuestionModel;
+              $oralQuestion->examId = $request->examType;
+              $oralQuestion->yearId = $request->year;
+              $oralQuestion->subjectId = $request->subject;
+              $oralQuestion->topicId = $request->topic;
+              $oralQuestion->questionNo = $request->questionNo;
+              $oralQuestion->question = $path;
+              $oralQuestion->mimeType = $questionMimeType;
+              $oralQuestion->answer = $request->answer;
+              $oralQuestion->options = $request->answerOptions;
+              $oralQuestion->hints = $request->hints;
+              $oralQuestion->publisher = $request->publisher;
+  
+              $res = $oralQuestion->save();
+  
+              if ($res) {
+                  return response()->json([
+                      'success' => true,
+                      'data' => $oralQuestion,
+                  ], 200);
+              } else {
+                  return response()->json([
+                      'success' => false,
+                      'message' => 'Failed to save oral question.',
+                  ], 500);
+              }
+          } else {
+              return response()->json([
+                  'success' => false,
+                  'message' => 'Failed to upload file to S3.',
+              ], 500);
+          }
+      } catch (\Exception $e) {
+          // Handle any exceptions here
+          return response()->json([
+              'success' => false,
+              'message' => 'Failed to store oral question: ' . $e->getMessage(),
+          ], 500);
+      }
+      }
+      
+
 
       public function updateQuestion(Request $request, $id){
         $formField = [

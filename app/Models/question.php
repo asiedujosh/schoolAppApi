@@ -13,7 +13,8 @@ class question extends Model
         if($filters['keyword'] ?? false){
         $query->where('examId','like','%' . request('keyword') . '%')
         ->orWhere('yearId','like','%' . request('keyword') . '%')
-        ->orWhere('subjectId','like','%' . request('keyword') .'%');
+        ->orWhere('subjectId','like','%' . request('keyword') .'%')
+        ->orWhere('questionNo','like','%' . request('keyword') .'%');
         }
     }
 }
