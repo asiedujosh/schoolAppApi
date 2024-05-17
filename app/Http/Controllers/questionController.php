@@ -114,6 +114,29 @@ class questionController extends Controller
     }
 
 
+    public function checkOralQuestionNo(Request $request) {
+      $examType = $request->input('examType');
+      $year = $request->input('year');
+      $subject = $request->input('subject');
+      $questionNo = $request->input('questionNo');
+
+      if(isset($questionNo) && $questionNo !== "undefined" ){
+
+       // Perform your logic based on these parameters
+       $exists = OralQuestionModel::where('examId', $examType)->where('yearId', $year)->where('subjectId', $subject)->where('questionNo', $questionNo)->exists();
+        // $results = question::latest()->filter(request(['keyword']))->get();
+       return $this->success([
+        'data' => $exists
+      ]);
+
+    } else {
+      return $this->success([
+        'data' => true
+      ]);
+    }
+    }
+
+
     public function countQuestions(){
       $countQuestions = question::count();
       return $this->success([
@@ -232,18 +255,12 @@ class questionController extends Controller
               $oralQuestion->publisher = $request->publisher;
   
               $res = $oralQuestion->save();
-  
-              if ($res) {
-                  return response()->json([
-                      'success' => true,
-                      'data' => $oralQuestion,
-                  ], 200);
-              } else {
-                  return response()->json([
-                      'success' => false,
-                      'message' => 'Failed to save oral question.',
-                  ], 500);
-              }
+
+              if($res){
+                return $this->success([
+                    'data' => $oralQuestion
+                   ]);
+               }
           } else {
               return response()->json([
                   'success' => false,
@@ -312,11 +329,91 @@ class questionController extends Controller
         }
     }
 
+
+    public function updateOralQuestion(Request $request){
+      $id = $request->id;
+      $examId = $request->examType;
+      $yearId = $request->year;
+      $subjectId = $request->subject;
+      $topicId = $request->topic;
+      $questionNo = $request->questionNo;
+      $hints = $request->hints;
+      $oldPath = $request->oldPath;
+      $options = $request->answerOptions;
+      $answer = $request->answer;
+      $mimeType = $request->mimeType;
+
+      if($request->file('question')){
+        if (Storage::disk('s3')->exists($oldPath)) {
+          
+          // Generate a unique filename with timestamp
+          $filename = time() . '_' . $request->file('question')->getClientOriginalName();
+          // Store the file in the S3 bucket
+          $path = Storage::disk('s3')->put('', $request->file('question'), $filename, 'public');
+           if($path){
+            Storage::disk('s3')->delete($oldPath);
+            $questionMimeType = $request->file('question')->getClientMimeType();
+            $formField = [
+            'examId' => $examId,
+            'yearId' => $yearId,
+            'subjectId' => $subjectId,
+            'topicId' => $topicId,
+            'questionNo' => $questionNo,
+            'question' => $path,
+            'mimeType' =>  $questionMimeType,
+            'options' => $options,
+            'answer' => $answer,
+            'hints' => $hints
+            ];
+
+            $res = OralQuestionModel::where('id', $id)->update($formField);
+            if($res){
+                return $this->success([
+                'data' => $res
+                ]);
+            }
+          }
+        }
+       }
+       else {
+        $formField = [
+          'examId' => $examId,
+          'yearId' => $yearId,
+          'subjectId' => $subjectId,
+          'topicId' => $topicId,
+          'questionNo' => $questionNo,
+          'options' => $options,
+          'answer' => $answer,
+          'hints' => $hints
+          ];
+
+          $res = OralQuestionModel::where('id', $id)->update($formField);
+          if($res){
+              return $this->success([
+              'data' => $res
+              ]);
+          }
+        }
+      }
+    
+
     public function deleteQuestion($id){
         $res = question::where('id', $id)->delete();
         return $this->success([
             'message' => "Question deleted Successfully"
         ]);
+    }
+
+    public function deleteOralQuestion(Request $request, $id){
+      $oldPath = $request->oldPath;
+      $id = $request->id;
+      if (Storage::disk('s3')->exists($oldPath)) {
+        Storage::disk('s3')->delete($oldPath);
+        $res = OralQuestionModel::where('id', $id)->delete();
+        return $this->success([
+            'message' => "Question deleted Successfully"
+        ]);
+      }
     }
       
 }

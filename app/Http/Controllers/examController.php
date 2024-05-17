@@ -22,7 +22,7 @@ class examController extends Controller
                 'current_page' => $exams->currentPage(),
                 'last_page' => $exams->lastPage()  
             ]
-           ]);
+        ]);
     }
 
 
@@ -40,6 +40,25 @@ class examController extends Controller
             'data' => $results
            ]);
     }
+
+    public function checkExamAvailability(Request $request) {
+        $exam = $request->input('exam');
+       
+        if(isset($exam) && $exam !== "undefined" ){
+  
+         // Perform your logic based on these parameters
+         $exists = exam::where('exam', $exam )->exists();
+          // $results = question::latest()->filter(request(['keyword']))->get();
+         return $this->success([
+          'data' => $exists
+        ]);
+  
+      } else {
+        return $this->success([
+          'data' => true
+        ]);
+      }
+      }
 
     public function store(Request $request){
         $examImage = null;

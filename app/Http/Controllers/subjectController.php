@@ -42,6 +42,25 @@ class subjectController extends Controller
            ]);
     }
 
+    public function checkSubjectAvailability(Request $request) {
+        $subject = $request->input('subject');
+       
+        if(isset($subject) && $subject !== "undefined" ){
+  
+         // Perform your logic based on these parameters
+         $exists = subject::where('subject', $subject )->exists();
+          // $results = question::latest()->filter(request(['keyword']))->get();
+         return $this->success([
+          'data' => $exists
+        ]);
+  
+      } else {
+        return $this->success([
+          'data' => true
+        ]);
+      }
+      }
+
     public function store(Request $request){
         $subject = new subject;
         $subject->subject = $request->subject;

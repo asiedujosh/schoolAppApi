@@ -53,6 +53,25 @@ class yearController extends Controller
           }
       }
 
+      public function checkYearAvailability(Request $request) {
+        $year = $request->input('year');
+       
+        if(isset($year) && $year !== "undefined" ){
+  
+         // Perform your logic based on these parameters
+         $exists = year::where('year', $year)->exists();
+          // $results = question::latest()->filter(request(['keyword']))->get();
+         return $this->success([
+          'data' => $exists
+        ]);
+  
+      } else {
+        return $this->success([
+          'data' => true
+        ]);
+      }
+      }
+
       public function updateYear(Request $request, $id){
         $formField = [
             'year' => $request->examsYear,

@@ -49,7 +49,10 @@ Route::get('/searchTopic', [topicController::class,'searchTopic']);
 
 /** Check Whether question no is assigned */
 Route::get('/checkQuestionNo',[questionController::class,'checkQuestionNo']);
-
+Route::get('/checkOralQuestionNo',[questionController::class,'checkOralQuestionNo']);
+Route::get('/checkYearAvailability',[yearController::class, 'checkYearAvailability']);
+Route::get('/checkExamAvailability',[examController:: class, 'checkExamAvailability']);
+Route::get('/checkSubjectAvailability',[subjectController:: class, 'checkSubjectAvailability']);
 
 
 Route::get('/getAllPackage',[packageController::class, 'index']);
@@ -104,11 +107,16 @@ Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchase
 Route::post('/addOralQuestion', [questionController::class, 'storeOralQuestion']);
 
 /** Edit Records */
+
+/** Special case */
+Route::post('/oralQuestionUpdate/{id}',[questionController::class, 'updateOralQuestion']);
+/** End Special Case */
 Route::put('/clientUpgradePackage/{id}',[packageController::class, 'updateClientPackage']);
 Route::put('/staffUpdate/{id}', [clientController::class, 'updateClient']);
 Route::put('/packageUpdate/{id}',[packageController::class, 'updatePackage']);
 Route::put('/examsUpdate/{id}',[examController::class, 'updateExams']);
 Route::put('/questionUpdate/{id}',[questionController::class, 'updateQuestion']);
+
 Route::put('/subjectUpdate/{id}',[subjectController::class, 'updateSubject']);
 Route::put('/yearUpdate/{id}',[yearController::class, 'updateYear']);
 Route::put('/topicUpdate/{id}',[topicController::class, 'updateTopic']);
@@ -117,6 +125,7 @@ Route::put('/linkExamSubjectUpdate/{id}',[examSubjectPriceController::class, 'up
 
 /**Delete Records  */
 Route::delete('/deletePackage/{id}',[packageController::class, 'deletePackage']);
+Route::delete('/deleteOralQuestion/{id}',[questionController::class, 'deleteOralQuestion']);
 Route::delete('/deleteExams/{id}',[examController::class, 'deleteExams']);
 Route::delete('/deleteQuestion/{id}',[questionController::class, 'deleteQuestion']);
 Route::delete('/deleteSubject/{id}',[subjectController::class, 'deleteSubject']);
