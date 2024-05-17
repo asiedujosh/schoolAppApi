@@ -223,19 +223,15 @@ class questionController extends Controller
           }
       }
 
-      public function storeOralQuestion(Request $request)
-      {
-        $request->validate([
-          'question' => 'required|file|mimes:mp3,wav,aac',
-          // Add other validation rules if necessary
-      ]);
-  
+      public function storeOralQuestion(Request $request){
       try {
           // Generate a unique filename with timestamp
           $filename = time() . '_' . $request->file('question')->getClientOriginalName();
   
           // Store the file in the S3 bucket
           $path = Storage::disk('s3')->put('', $request->file('question'), $filename, 'public');
+
+         
   
           if ($path) {
               // File uploaded successfully
