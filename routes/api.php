@@ -13,6 +13,9 @@ use App\Http\Controllers\quizRecordsController;
 use App\Http\Controllers\packageController;
 use App\Http\Controllers\newsController;
 use App\Http\Controllers\examSubjectPriceController;
+use App\Http\Controllers\CodeCheckController;
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ForgotPasswordController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -27,6 +30,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //     return "Migrations executed successfully";
 // });
+
+
+
+// Password reset routes
+Route::post('password/email',  [ForgotPasswordController::class, 'index']);
+Route::post('password/code/check', CodeCheckController::class);
+Route::post('password/reset', [ResetPasswordController::class, 'index']);
+
+
 
 Route::get('/',[clientController::class, 'index']);
 /*** Users Route */
@@ -93,6 +105,11 @@ Route::get('/getAllStaff',[clientController::class, 'index']);
 Route::get('/getRecordsOfUser', [quizRecordsController::class, 'quizRecordsOfUser']);
 Route::get('/getRecordReview', [quizRecordsController::class, 'getRecordReview']);
 Route::get('/getAllSubscribers',[packageController::class, 'getSubscribers']);
+
+/**Reset Password */
+Route::post('passwordForgot', [forgotPasswordController::class, 'sendResetLinkEmail']);
+Route::post('passwordReset', [resetPasswordController::class, 'reset']);
+/** End reset Password */
 
 Route::post('/addPricePackage', [packageController::class, 'store']);
 Route::post('/addExam', [examController::class, 'store']);

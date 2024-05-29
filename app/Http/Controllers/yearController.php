@@ -13,7 +13,7 @@ class yearController extends Controller
       //
 
       public function mobileIndex(){
-        $year = year::all();
+        $year = year::orderBy('id', 'DESC')->get();
         return $this->success([
             'data' => $year
         ]);
