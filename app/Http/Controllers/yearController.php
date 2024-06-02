@@ -77,7 +77,6 @@ class yearController extends Controller
             'year' => $request->examsYear,
         ];
 
-
         $res = year::where('id', $id)->update($formField);
         if($res){
             return $this->success([

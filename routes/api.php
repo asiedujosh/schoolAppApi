@@ -10,6 +10,7 @@ use App\Http\Controllers\yearController;
 use App\Http\Controllers\topicController;
 use App\Http\Controllers\questionController;
 use App\Http\Controllers\quizRecordsController;
+use App\Http\Controllers\oralQuizRecordsController;
 use App\Http\Controllers\packageController;
 use App\Http\Controllers\newsController;
 use App\Http\Controllers\examSubjectPriceController;
@@ -95,6 +96,7 @@ Route::get('/countQuestions',[questionController::class, 'countQuestions']);
 Route::get('/countOralQuestions',[questionController::class, 'countOralQuestions']);
 Route::get('/countSubscribers',[packageController::class, 'countSubscribers']);
 Route::get('/getSelectedQuestion',[questionController::class, 'selectedQuestions']);
+Route::get('/getSelectedOralQuestion',[questionController::class, 'selectedOralQuestions']);
 
 Route::get('/userPurchases', [examSubjectPriceController::class, 'getPurchases']);
 
@@ -105,6 +107,12 @@ Route::get('/getAllStaff',[clientController::class, 'index']);
 Route::get('/getRecordsOfUser', [quizRecordsController::class, 'quizRecordsOfUser']);
 Route::get('/getRecordReview', [quizRecordsController::class, 'getRecordReview']);
 Route::get('/getAllSubscribers',[packageController::class, 'getSubscribers']);
+
+
+/** Get oral quiz records */
+Route::get('/getOralRecordsOfUser', [oralQuizRecordsController::class, 'quizOralRecordsOfUser']);
+Route::get('/getOralRecordReview', [oralQuizRecordsController::class, 'getOralRecordReview']);
+
 
 /**Reset Password */
 Route::post('passwordForgot', [forgotPasswordController::class, 'sendResetLinkEmail']);
@@ -119,6 +127,7 @@ Route::post('/addTopic', [topicController::class, 'store']);
 Route::post('/addQuestion', [questionController::class, 'store']);
 Route::post('/addNews', [newsController::class, 'addNews']);
 Route::post('/addQuizRecords', [quizRecordsController::class, 'store']);
+Route::post('/addOralQuizRecords', [oralQuizRecordsController::class, 'store']);
 Route::post('/linkExamSubject',[examSubjectPriceController::class, 'store']);
 Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchases']);
 Route::post('/addOralQuestion', [questionController::class, 'storeOralQuestion']);
@@ -151,6 +160,7 @@ Route::delete('/deleteYear/{id}',[yearController::class, 'deleteYear']);
 Route::delete('/deleteUser/{id}',[userController::class, 'deleteUser']);
 Route::delete('/deleteStaff/{id}', [clientController::class, 'deleteClient']);
 Route::delete('/deleteRecord/{id}', [quizRecordsController::class, 'deleteRecords']);
+Route::delete('/deleteOralRecord/{id}', [oralQuizRecordsController::class, 'deleteOralRecords']);
 Route::delete('/deleteNews/{id}', [newsController::class, 'deleteNews']);
 Route::delete('/deleteExamSubjectLink/{id}', [examSubjectPriceController::class, 'deleteExamSubjectLink']);
 

@@ -151,6 +151,7 @@ class questionController extends Controller
       ]);
     }
 
+    // This is for actual quiz
     public function selectedQuestions(Request $request){
         $examType = $request->input('examType');
         $year = $request->input('year');
@@ -174,6 +175,39 @@ class questionController extends Controller
         } else {
             return 'No data';
         }
+    }
+
+    // This is for oral quiz
+    public function selectedOralQuestions(Request $request){
+      $examType = $request->input('examType');
+      $year = $request->input('year');
+      $subject = $request->input('subject');
+      $questionNos = $request->input('questionNos');
+
+      //Perform your logic based on these parameters
+      $query = oralQuestionModel::where('examId', $examType) -> where('yearId', $year)->where('subjectId', $subject);
+      $oralQuestions = $query->orderBy('questionNo', 'asc')->get();
+
+      if($questionNos !== null){
+        $query->take($questionNos);
+      }
+
+      $oralQuestions = $query->get();
+
+       // Generate pre-signed URLs for each audio file
+       foreach ($oralQuestions as $question) {
+        $question->audio_url = Storage::disk('s3')->temporaryUrl(
+            $question->question, now()->addMinutes(5)
+        );
+    }
+
+      if($oralQuestions){
+          return $this->success([
+            'data' => $oralQuestions
+          ]);
+      } else {
+        return 'No data';
+      }
     }
 
   
@@ -243,6 +277,7 @@ class questionController extends Controller
               $oralQuestion->subjectId = $request->subject;
               $oralQuestion->topicId = $request->topic;
               $oralQuestion->questionNo = $request->questionNo;
+              $oralQuestion->comment = $request->comment;
               $oralQuestion->question = $path;
               $oralQuestion->mimeType = $questionMimeType;
               $oralQuestion->answer = $request->answer;

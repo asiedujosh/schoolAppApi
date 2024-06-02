@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('yearId');
             $table->string('subjectId');
             $table->string('topicId')->nullable();
+            $table->longText('comment')->nullable();
             $table->longText('question');
             $table->string('mimeType');
             $table->integer('questionNo');
