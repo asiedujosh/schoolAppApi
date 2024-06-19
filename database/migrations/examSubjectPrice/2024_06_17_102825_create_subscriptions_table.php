@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exam_subject_price_relations', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('examId');
-            $table->string('subjectId');
-            $table->string('offerType');
-            $table->string('examTime');
+            $table->string('userId');
+            $table->string('examSubjectId');
+            $table->string('durationType');
+            $table->decimal('amount', 8, 2);
+            $table->string('startDate');
+            $table->string('endDate');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exam_subject_price_relations');
+        Schema::dropIfExists('subscriptions');
     }
 };

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class examSubjectPriceRelation extends Model
+class priviledges extends Model
 {
     use HasFactory;
 
     public function scopeFilter($query, array $filters){
         if($filters['keyword'] ?? false){
-        $query->where('name','like','%' . request('keyword') . '%');
+        $query->where('username','like','%' . request('keyword') . '%');
         }
     }
 }

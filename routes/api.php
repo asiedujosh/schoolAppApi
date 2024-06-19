@@ -12,6 +12,7 @@ use App\Http\Controllers\questionController;
 use App\Http\Controllers\quizRecordsController;
 use App\Http\Controllers\oralQuizRecordsController;
 use App\Http\Controllers\packageController;
+use App\Http\Controllers\priviledgeController;
 use App\Http\Controllers\newsController;
 use App\Http\Controllers\examSubjectPriceController;
 use App\Http\Controllers\CodeCheckController;
@@ -53,12 +54,16 @@ Route::post('/workerRegister',[clientController::class, 'store']);
 /** Search */
 Route::get('/searchUser', [userController::class,'searchUser']);
 Route::get('/searchClient', [userController::class,'searchClient']);
-Route::get('/searchExam', [examController::class,'searchExam']);
-Route::get('/searchSubject', [subjectController::class,'searchSubject']);
-Route::get('/searchYear', [yearController::class,'searchYear']);
-Route::get('/searchQuestion', [questionController::class,'searchQuestion']);
+Route::get('/searchExam', [examController::class, 'searchExam']);
+Route::get('/searchSubject', [subjectController::class, 'searchSubject']);
+Route::get('/searchYear', [yearController::class, 'searchYear']);
+Route::get('/searchDuration', [examSubjectPriceController::class, 'searchDuration']);
+Route::get('/searchExamSubject', [examSubjectPriceController::class, 'searchExamSubjectLink']);
+Route::get('/searchPricing', [examSubjectPriceController::class, 'searchPricing']);
+Route::get('/searchQuestion', [questionController::class, 'searchQuestion']);
 Route::get('/searchOralQuestion', [questionController::class, 'searchOralQuestion']);
-Route::get('/searchTopic', [topicController::class,'searchTopic']);
+Route::get('/searchTopic', [topicController::class, 'searchTopic']);
+Route::get('/searchPriviledge', [priviledgeController::class, 'searchPriviledge']);
 
 /** Check Whether question no is assigned */
 Route::get('/checkQuestionNo',[questionController::class,'checkQuestionNo']);
@@ -90,6 +95,7 @@ Route::get('/mobileGetAllLinkedExamSubject',[examSubjectPriceController::class, 
 Route::get('/getAllLinkedExamSubject',[examSubjectPriceController::class, 'index']);
 
 
+Route::get('/getAllPriviledge',[priviledgeController::class, 'index']);
 Route::get('/getAllQuestion',[questionController::class, 'index']);
 Route::get('/getAllOralQuestion',[questionController::class, 'getOralQuestions']);
 Route::get('/countQuestions',[questionController::class, 'countQuestions']);
@@ -99,6 +105,11 @@ Route::get('/getSelectedQuestion',[questionController::class, 'selectedQuestions
 Route::get('/getSelectedOralQuestion',[questionController::class, 'selectedOralQuestions']);
 
 Route::get('/userPurchases', [examSubjectPriceController::class, 'getPurchases']);
+Route::get('/getDuration',[examSubjectPriceController::class, 'getDuration']); 
+Route::get('/getAllDuration',[examSubjectPriceController::class, 'getDurationPagination']);
+Route::get('/getPricing', [examSubjectPriceController::class, 'getPricing']);
+Route::get('/getAllPricing', [examSubjectPriceController::class, 'getPricingAll']);
+Route::get('/getMySubscription', [examSubjectPriceController::class, 'getMySubscription']);
 
 
 /** Get Records */
@@ -130,7 +141,11 @@ Route::post('/addQuizRecords', [quizRecordsController::class, 'store']);
 Route::post('/addOralQuizRecords', [oralQuizRecordsController::class, 'store']);
 Route::post('/linkExamSubject',[examSubjectPriceController::class, 'store']);
 Route::post('/storePurchases',[examSubjectPriceController::class, 'storePurchases']);
+Route::post('/addDuration',[examSubjectPriceController::class, 'storeDuration']);
+Route::post('/storePricing',[examSubjectPriceController::class, 'storePricing']);
+Route::post('/subscribe',[examSubjectPriceController::class, 'subscribe']);
 Route::post('/addOralQuestion', [questionController::class, 'storeOralQuestion']);
+Route::post('/storePriviledge',[priviledgeController::class, 'store']);
 
 /** Edit Records */
 
@@ -142,12 +157,14 @@ Route::put('/staffUpdate/{id}', [clientController::class, 'updateClient']);
 Route::put('/packageUpdate/{id}',[packageController::class, 'updatePackage']);
 Route::put('/examsUpdate/{id}',[examController::class, 'updateExams']);
 Route::put('/questionUpdate/{id}',[questionController::class, 'updateQuestion']);
-
+Route::put('/priviledgeUpdate/{id}',[priviledgeController::class, 'updatePriviledge']);
 Route::put('/subjectUpdate/{id}',[subjectController::class, 'updateSubject']);
 Route::put('/yearUpdate/{id}',[yearController::class, 'updateYear']);
 Route::put('/topicUpdate/{id}',[topicController::class, 'updateTopic']);
 Route::put('/updateNews/{id}',[newsController::class, 'updateNews']);
 Route::put('/linkExamSubjectUpdate/{id}',[examSubjectPriceController::class, 'updateExamSubjectLink']);
+Route::put('/durationUpdate/{id}',[examSubjectPriceController::class, 'updateDuration']);
+Route::put('/pricingUpdate/{id}',[examSubjectPriceController::class, 'updatePricing']);
 
 /**Delete Records  */
 Route::delete('/deletePackage/{id}',[packageController::class, 'deletePackage']);
@@ -163,6 +180,9 @@ Route::delete('/deleteRecord/{id}', [quizRecordsController::class, 'deleteRecord
 Route::delete('/deleteOralRecord/{id}', [oralQuizRecordsController::class, 'deleteOralRecords']);
 Route::delete('/deleteNews/{id}', [newsController::class, 'deleteNews']);
 Route::delete('/deleteExamSubjectLink/{id}', [examSubjectPriceController::class, 'deleteExamSubjectLink']);
+Route::delete('/deleteDuration/{id}', [examSubjectPriceController::class, 'deleteDuration']);
+Route::delete('/deletePricing/{id}', [examSubjectPriceController::class, 'deletePricing']);
+Route::delete('/deletePriviledge/{id}', [priviledgeController::class, 'deletePriviledge']);
 
 
 Route::middleware(['auth:sanctum'])->get('/retrieve', [clientController::class, 'getUserDetails']);

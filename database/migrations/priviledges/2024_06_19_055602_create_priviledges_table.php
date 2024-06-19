@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exam_subject_price_relations', function (Blueprint $table) {
+        Schema::create('priviledges', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('examId');
-            $table->string('subjectId');
-            $table->string('offerType');
-            $table->string('examTime');
+            $table->string('username')->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exam_subject_price_relations');
+        Schema::dropIfExists('priviledges');
     }
 };
