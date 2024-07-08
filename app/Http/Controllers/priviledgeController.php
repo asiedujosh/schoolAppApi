@@ -12,7 +12,7 @@ class priviledgeController extends Controller
     public function index(Request $request){
         $pageNo = $request->input('page');
         $perPage = $request->input('perPage');
-        $priviledge = priviledges::orderBy('id', 'DESC')->paginate($perPage, ['*'], 'page', $pageNo);
+        $priviledge = priviledges::paginate($perPage, ['*'], 'page', $pageNo);
         return $this->success([
             'data' => $priviledge,
             'pagination' => [
@@ -21,6 +21,13 @@ class priviledgeController extends Controller
                 'last_page' => $priviledge->lastPage()  
             ]
         ]);
+    }
+
+    public function mobileIndex(){
+        $res = priviledges::all();
+        return $this->success([
+            'data' => $res
+           ]); 
     }
 
 

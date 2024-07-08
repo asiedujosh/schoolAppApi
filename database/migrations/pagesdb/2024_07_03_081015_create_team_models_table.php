@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('team_models', function (Blueprint $table) {
             $table->id();
-            $table->string('userId');
-            $table->string('examSubjectId');
-            $table->string('durationType');
-            $table->decimal('amount', 8, 2);
-            $table->string('startDate');
-            $table->string('endDate');
+            $table->longText('team');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('team_models');
     }
 };

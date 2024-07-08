@@ -7,6 +7,7 @@ use App\Models\paidExamSubjectSubscribers;
 use App\Models\duration;
 use App\Models\pricing;
 use App\Models\subscription;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -73,9 +74,9 @@ class examSubjectPriceController extends Controller
 
     public function getMySubscription(Request $request){
         $userId = $request->userId;
-        $mySubscription = subscription::where('userId', $userId)->get();
+        $mySubscription = subscription::where('userId', $userId)->where('status', 'active')->get();
         return $this->success([
-            'data' => $purchases
+            'data' => $mySubscription
         ]);
     }
 
@@ -257,20 +258,28 @@ class examSubjectPriceController extends Controller
         }
     }
 
+    //Get timeline for duration Type
+    public function getDurationMonth ($name){
+        $duration = duration::where('name', $name)->first();
+        return $duration->noOfMonths;
+    }
+
 
     public function subscribe(Request $request){
+        $noOfMonths = $this->getDurationMonth($request->durationType);
+        $currentDate =  Carbon::now();
         $subscription = new subscription;
         $subscription->userId = $request->userId;
         $subscription->examSubjectId = $request->examSubjectId;
         $subscription->durationType = $request->durationType;
         $subscription->amount = $request->amount;
-        $subscription->startDate = $request->startDate;
-        $subscription->endDate = $request->endDate;
+        $subscription->startDate = $currentDate->toDateString();
+        $subscription->endDate = $currentDate->addMonths($noOfMonths)->format('Y-m-d');
         $subscription->status = "active";
         $res = $subscription->save();
         if($res){
             return $this->success([
-                'data' => $subscription
+                'data' => true
             ]);
         }
     }

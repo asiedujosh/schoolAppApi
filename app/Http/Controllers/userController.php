@@ -42,10 +42,10 @@ class userController extends Controller
         try {
             $user = new User;
             $user->username = trim($request->username);
-            $user->tel = trim($request->tel);
+            $user->tel = $request->tel;
             $user->password = trim($request->password);
             $user->email = trim($request->email);
-            $user->country = $request->country;
+            $user->country = $request->countryName;
             $user->packageId = $request->packageId ?? "1";
             $res = $user->save();
     
@@ -66,6 +66,21 @@ class userController extends Controller
         }
      }
 
+    public function updateUser(Request $request, $id){
+       $formField = [
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'country' => $request->country
+        ];
+
+        $res = User::where('username', $id)->update($formField);
+        if($res){
+            return $this->success([
+                'data' => $res
+            ]);
+        }
+    }
+
 
      public function login(Request $request){
         $credentials = array_map('trim', $request->only('username', 'password'));
@@ -81,6 +96,28 @@ class userController extends Controller
             'token'=>$user->createToken('accessToken'.$user->username)->plainTextToken
         ]);
     }
+
+
+    public function updatePassword(Request $request, $id){
+        $credentials = array_map('trim', $request->only('username', 'password'));
+        if(!Auth::attempt($credentials)){
+            return $this->success([
+                'data' => false
+            ]);
+        } else {
+            $formField = [
+                'password' =>  Hash::make($request->newPassword)
+            ];
+
+            $res = User::where('username', $id)->update($formField);
+            if($res){
+                return $this->success([
+                    'data' => true
+                ]);
+            }
+        }
+    }
+
 
     public function deleteUser(Request $request){
         $res = User::where('id', $id)->delete();
