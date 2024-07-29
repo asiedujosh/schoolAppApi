@@ -171,6 +171,8 @@ class examSubjectPriceController extends Controller
         $pricing->examSubjectId = $request->examSubjectId;
         $pricing->price = $request->pricing;
         $pricing->durationType = $request->durationType;
+        $pricing->productId = $request->productId;
+        $pricing->referenceId = $request->referenceId;
         $res = $pricing->save();
         if($res){
             return $this->success([
