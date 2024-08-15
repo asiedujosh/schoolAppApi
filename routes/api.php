@@ -116,7 +116,6 @@ Route::get('/getAllPricing', [examSubjectPriceController::class, 'getPricingAll'
 Route::get('/getMySubscription', [examSubjectPriceController::class, 'getMySubscription']);
 
 
-
 /** Get Records */
 Route::get('/getAllUsers',[userController::class, 'index']);
 Route::get('/getAllStaff',[clientController::class, 'index']);
@@ -199,6 +198,7 @@ Route::put('/testimonialUpdate/{id}', [pagesController::class, 'updateTestimonia
 Route::put('/heroBannerUpdate/{id}', [pagesController::class, 'updateHeroBanner']);
 Route::put('/productsUpdate/{id}', [pagesController::class, 'updateProducts']);
 Route::put('/bannerTypeUpdate/{id}', [pagesController::class, 'updateBannerType']);
+Route::put('/terminateUser/{id}', [userController::class, 'terminateUser']);
 
 /**Delete Records  */
 Route::delete('/deletePackage/{id}',[packageController::class, 'deletePackage']);
