@@ -103,6 +103,10 @@ class userController extends Controller
         }
 
         $user = User::where('username', $request->username)->where('status', 'active')->first();
+
+        if (!$user) {
+            return $this->error('','Credentials do not match', 401); // Or any appropriate response
+        }
         // Set the expiration time for the token (e.g., 1 hour from now)
         return $this->success([
             'user'=>$user,
